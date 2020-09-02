@@ -1,35 +1,40 @@
-
-
 <template>
-  <ag-grid-vue
-    style="width: 500px; height: 300px;"
-    class="ag-theme-alpine"
-    :columnDefs="columnDefs"
-    :rowData="rowData"
-  ></ag-grid-vue>
+  <div>
+    <div>Last clicked value: {{lastClickedValue}}</div>
+    <ag-grid-vue
+      style="width: 500px; height: 300px;"
+      class="ag-theme-alpine"
+      :columnDefs="columnDefs"
+      :rowData="rowData"
+      :context="context"
+    ></ag-grid-vue>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
 /* eslint-disable vue/no-unused-components */
 
+import { Component, Vue } from "vue-property-decorator";
 import { AgGridVue } from "ag-grid-vue";
 import MyRenderer from "./components/MyRenderer.vue";
 import MyEditor from "./components/MyEditor.vue";
 
-export default {
+@Component({
   name: "App",
-  data() {
-    return {
-      columnDefs: null,
-      rowData: null
-    };
-  },
   components: {
     AgGridVue,
     MyRenderer,
     MyEditor
-  },
-  beforeMount() {
+  }
+})
+export default class App extends Vue {
+  private columnDefs: any = null;
+  private rowData: any = null;
+  private context = {
+    componentParent: this
+  };
+  private lastClickedValue = null;
+  public beforeMount() {
     this.columnDefs = [
       {
         headerName: "Make (Cell Renderer)",
@@ -51,7 +56,10 @@ export default {
       { make: "Porsche", model: "Boxter", price: 72000 }
     ];
   }
-};
+  private exec(value: any) {
+    this.lastClickedValue = value;
+  }
+}
 </script>
 
 <style lang="scss">
