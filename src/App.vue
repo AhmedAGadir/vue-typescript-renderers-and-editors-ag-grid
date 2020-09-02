@@ -1,32 +1,60 @@
+
+
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
+  <ag-grid-vue
+    style="width: 500px; height: 300px;"
+    class="ag-theme-alpine"
+    :columnDefs="columnDefs"
+    :rowData="rowData"
+  ></ag-grid-vue>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+/* eslint-disable vue/no-unused-components */
 
-#nav {
-  padding: 30px;
+import { AgGridVue } from "ag-grid-vue";
+import MyRenderer from "./components/MyRenderer.vue";
+import MyEditor from "./components/MyEditor.vue";
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+export default {
+  name: "App",
+  data() {
+    return {
+      columnDefs: null,
+      rowData: null
+    };
+  },
+  components: {
+    AgGridVue,
+    MyRenderer,
+    MyEditor
+  },
+  beforeMount() {
+    this.columnDefs = [
+      {
+        headerName: "Make (Cell Renderer)",
+        field: "make",
+        cellRendererFramework: "MyRenderer"
+      },
+      {
+        headerName: "Model (Editable)",
+        field: "model",
+        cellEditorFramework: "MyEditor",
+        editable: true
+      },
+      { headerName: "Price", field: "price" }
+    ];
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+    this.rowData = [
+      { make: "Toyota", model: "Celica", price: 35000 },
+      { make: "Ford", model: "Mondeo", price: 32000 },
+      { make: "Porsche", model: "Boxter", price: 72000 }
+    ];
   }
-}
+};
+</script>
+
+<style lang="scss">
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 </style>
